@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sy:switchyard xmlns:camel="urn:switchyard-component-camel:config:1.1" xmlns:resteasy="urn:switchyard-component-resteasy:config:1.1" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:soap="urn:switchyard-component-soap:config:1.1" xmlns:sy="urn:switchyard-config:switchyard:1.1" name="client.financial.proxy" targetNamespace="urn:ec.com.softwareevolutivo:client.financial.proxy:1.0">
+  <sca:composite name="client.financial.proxy" targetNamespace="urn:ec.com.softwareevolutivo:client.financial.proxy:1.0">
+    <sca:component name="Route">
+      <camel:implementation.camel>
+        <camel:xml path="route.xml"/>
+      </camel:implementation.camel>
+      <sca:service name="FinancialService">
+        <sca:interface.java interface="ec.com.softwareevolutivo.client.financial.proxy.FinancialService"/>
+      </sca:service>
+      <sca:reference name="FinancialServiceRest">
+        <sca:interface.java interface="ec.com.softwareevolutivo.client.financial.proxy.FinancialService"/>
+      </sca:reference>
+    </sca:component>
+    <sca:service name="FinancialService" promote="Route/FinancialService">
+      <sca:interface.java interface="ec.com.softwareevolutivo.client.financial.proxy.FinancialService"/>
+      <soap:binding.soap name="soap1">
+        <soap:wsdl>FinancialService.wsdl</soap:wsdl>
+        <soap:wsdlPort>FinancialServicePort</soap:wsdlPort>
+        <soap:socketAddr>:8080</soap:socketAddr>
+        <soap:contextPath>proxy_rest</soap:contextPath>
+      </soap:binding.soap>
+    </sca:service>
+    <sca:reference name="FinancialServiceRest" multiplicity="0..1" promote="Route/FinancialServiceRest">
+      <sca:interface.java interface="ec.com.softwareevolutivo.client.financial.proxy.FinancialService"/>
+      <resteasy:binding.rest name="rest1">
+        <resteasy:messageComposer class="ec.com.softwareevolutivo.client.financial.proxy.CustomComposer"/>
+        <resteasy:interfaces>ec.com.softwareevolutivo.client.financial.proxy.FinancialService</resteasy:interfaces>
+        <resteasy:address>http://localhost:18080/client.financial/client</resteasy:address>
+      </resteasy:binding.rest>
+    </sca:reference>
+  </sca:composite>
+  <sy:domain>
+    <sy:properties>
+      <sy:property name="org.switchyard.handlers.messageTrace.enabled" value="true"/>
+    </sy:properties>
+  </sy:domain>
+</sy:switchyard>

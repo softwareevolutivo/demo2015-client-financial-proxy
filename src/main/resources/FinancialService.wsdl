@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="FinancialService" targetNamespace="urn:ec.com.softwareevolutivo:client.financial.proxy:1.0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:ec.com.softwareevolutivo:client.financial.proxy:1.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:ec.com.softwareevolutivo:client.financial.proxy:1.0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ec.com.softwareevolutivo:client.financial.proxy:1.0">
+  <xsd:element name="liabilities" type="tns:liabilities"/>
+  <xsd:complexType name="liabilities">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="string" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="liabilitiesResponse" type="tns:liabilitiesResponse"/>
+  <xsd:complexType name="liabilitiesResponse">
+    <xsd:sequence>
+      <xsd:element name="map">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="entry">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element minOccurs="0" name="key" type="xsd:string"/>
+                  <xsd:element minOccurs="0" name="value" type="xsd:anyType"/>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="liabilitiesResponse">
+    <wsdl:part name="parameters" element="tns:liabilitiesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="liabilities">
+    <wsdl:part name="parameters" element="tns:liabilities">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="FinancialServicePortType">
+    <wsdl:operation name="liabilities">
+      <wsdl:input name="liabilities" message="tns:liabilities">
+    </wsdl:input>
+      <wsdl:output name="liabilitiesResponse" message="tns:liabilitiesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FinancialServiceSoapBinding" type="tns:FinancialServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="liabilities">
+      <soap:operation soapAction="liabilities" style="document"/>
+      <wsdl:input name="liabilities">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="liabilitiesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FinancialService">
+    <wsdl:port name="FinancialServicePort" binding="tns:FinancialServiceSoapBinding">
+      <soap:address location="http://localhost:8080/client.financial.proxy/FinancialService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
